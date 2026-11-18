@@ -1,0 +1,38 @@
+name: Build ShopScope
+on:
+  push:
+    paths:
+      - 'notebooks/**'
+      - 'scripts/**'
+      - 'requirements.txt'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python scripts/download_data.py
+      - run: python scripts/run_notebook.py
+      - name: Build office documents from notebook outputs
+        run: |
+          if [ -f scripts/export_office.py ]; then python scripts/export_office.py; fi
+      - name: Upload evidence and submission
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShopScope-submission
+          path: |
+            outputs/ShopScope_Data_Analysis.executed.ipynb
+            outputs/evidence.json
+            outputs/figures/
+            outputs/tables/
+            reports/
+          if-no-files-found: error
