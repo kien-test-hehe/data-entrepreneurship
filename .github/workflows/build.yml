@@ -8,7 +8,7 @@ on:
       - '.github/workflows/build.yml'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,8 +23,9 @@ jobs:
       - run: python scripts/download_data.py
       - run: python scripts/run_notebook.py
       - name: Build office documents from notebook outputs
-        run: |
-          if [ -f scripts/export_office.py ]; then python scripts/export_office.py; fi
+        run: python scripts/export_office.py
+      - name: Validate artifact structure, evidence and MVP
+        run: python scripts/validate_submission.py
       - name: Upload evidence and submission
         uses: actions/upload-artifact@v4
         with:
@@ -36,3 +37,18 @@ jobs:
             outputs/tables/
             reports/
           if-no-files-found: error
+      - name: Publish verified aggregate deliverables to the repository
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          if [ "$(git rev-parse origin/main)" != "$GITHUB_SHA" ]; then
+            echo "A newer source revision exists; artifact retained, publish skipped."
+            exit 0
+          fi
+          git add reports/ outputs/evidence.json outputs/figures/ outputs/tables/ outputs/ShopScope_Data_Analysis.executed.ipynb
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish executed ShopScope submission [skip ci]"
+            git push origin HEAD:main
+          fi

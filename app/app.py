@@ -10,7 +10,7 @@ if not (out/'private/vietnam_analysis.csv').exists():
     st.error('Run python scripts/download_data.py and python scripts/run_notebook.py locally first.');st.stop()
 d=pd.read_csv(out/'private/vietnam_analysis.csv',dtype={'shop_id':str,'product_id':str})
 e=json.loads((out/'evidence.json').read_text())
-view=st.sidebar.radio('Workspace',['Market overview','Product explorer','Pricing advisor'])
+view=st.sidebar.radio('Workspace',['Market overview','Product explorer','Competitor analysis','Price intelligence','Opportunity finder','Pricing advisor'])
 if view=='Market overview':
     a,b,c=st.columns(3);a.metric('Unique Vietnam listings',f"{e['vn_listings']:,}");b.metric('Observed shops',f"{e['vn_shops']:,}");c.metric('Historical median asking price',f"{e['vn_price_median']:,.0f} VND")
     st.image(str(out/'figures/03_price.png'));st.image(str(out/'figures/05_concentration.png'));st.info('Listing counts are not market share. Prices are historical.')
@@ -21,6 +21,24 @@ elif view=='Product explorer':
     if selected:rows=rows[rows.brand.isin(selected)]
     st.write(f'{len(rows):,} observed listings')
     st.dataframe(rows[['title','brand','price','quantity','size','type','unit_eligible']].head(200),hide_index=True)
+elif view=='Competitor analysis':
+    st.subheader('Observed competitor structure')
+    st.image(str(out/'figures/05_concentration.png'))
+    st.image(str(out/'figures/20_brand_shops.png'))
+    st.caption('Shop ID counts are not company counts or sales market share.')
+elif view=='Price intelligence':
+    st.subheader('Historical price intelligence')
+    st.image(str(out/'figures/03_price.png'))
+    st.image(str(out/'figures/06_brand_price.png'))
+    st.image(str(out/'figures/09_unit_price.png'))
+    st.image(str(out/'figures/15_variant_risk.png'))
+    st.warning('Unit prices are indicative and require manual pack / variant confirmation.')
+elif view=='Opportunity finder':
+    st.subheader('Explore recorded brand segments')
+    st.image(str(out/'figures/10_opportunity.png'))
+    st.image(str(out/'figures/17_opportunity_sensitivity.png'))
+    st.dataframe(pd.read_csv(out/'tables/opportunities.csv').drop(columns=['Unnamed: 0'],errors='ignore'),hide_index=True)
+    st.warning('Exploratory ranking, not a forecast or inventory recommendation.')
 else:
     st.subheader('Cost-aware pricing advisor')
     pool=d[d.unit_eligible & d.brand.notna() & d.title.notna()].copy()
