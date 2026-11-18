@@ -1,6 +1,6 @@
 """Capture the actual aggregate-only Streamlit market overview for the pitch."""
 from pathlib import Path
-import sys, subprocess, time, urllib.request
+import sys, subprocess, time, urllib.request, shutil
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
 dest=root/'outputs/mvp';dest.mkdir(parents=True,exist_ok=True)
@@ -14,7 +14,8 @@ with (dest/'server.log').open('w') as log:
             except Exception:time.sleep(1)
         else:raise RuntimeError('Streamlit did not start')
         with sync_playwright() as pw:
-            browser=pw.chromium.launch(headless=True,args=['--no-sandbox'])
+            installed=next((shutil.which(x) for x in ('google-chrome','google-chrome-stable','chromium') if shutil.which(x)),None)
+            browser=pw.chromium.launch(headless=True,args=['--no-sandbox'],**({'executable_path':installed} if installed else {}))
             page=browser.new_page(viewport={'width':1440,'height':980},device_scale_factor=1)
             page.goto('http://127.0.0.1:8501',wait_until='domcontentloaded',timeout=60000)
             page.get_by_text('Historical median asking price',exact=True).wait_for(timeout=60000)
