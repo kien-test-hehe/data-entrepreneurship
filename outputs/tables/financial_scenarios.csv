@@ -1,0 +1,4 @@
+scenario,paid_accounts,mrr,arr_run_rate,monthly_operating_result
+Conservative,100,9900000,118800000,-12100000
+Base,500,49500000,594000000,19500000
+Optimistic,1500,148500000,1782000000,98500000

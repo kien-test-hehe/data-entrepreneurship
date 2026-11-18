@@ -1,0 +1,206 @@
+{
+  "source": "Easy Data | Shopee Diaper Listings: Six Markets, November 2025",
+  "crawl_date": "2025-11-18",
+  "source_url": "https://www.kaggle.com/datasets/johnphamed/shopee-diaper-listings-six-markets-november-2025",
+  "publisher_url": "https://github.com/JohnPham-easydata/Shopee-Dataset/blob/main/README.md",
+  "files": [
+    {
+      "file": "ID_RQ5_Category_Data_2025_11_18_2025_analysis (3).xlsx",
+      "rows": 8851,
+      "columns": 46,
+      "sha256": "82995bf5cf22dfb6213e8390d17a1b2e72c374ac575ba8ff929f48ad49edf8e0"
+    },
+    {
+      "file": "MY_RQ4_Category_Data_2025_11_18_2025_analysis (3).xlsx",
+      "rows": 2328,
+      "columns": 47,
+      "sha256": "e9cf35c4ed0933a56dfb2ba4d51e2cc0844f048ffb6a0c2ff8a406c934646c4c"
+    },
+    {
+      "file": "PH_RQ3_Category_Data_2025_11_18_2025_analysis (1).xlsx",
+      "rows": 4265,
+      "columns": 47,
+      "sha256": "586c0854448ef41704f2cf2437c516f9f1653d289ccbc9673a061cc85289297b"
+    },
+    {
+      "file": "SG_RQ10_Category_Data_2025_11_18_2025_analysis (1).xlsx",
+      "rows": 1373,
+      "columns": 47,
+      "sha256": "817738226dbababfb22ff6e28922660bfa5f6179b556175dd4ed9c5eab10c345"
+    },
+    {
+      "file": "TH_RQ1_Category_Data_2025_11_18_2025_analysis (1).xlsx",
+      "rows": 2176,
+      "columns": 47,
+      "sha256": "8b85cb763006a5dd98503982cd2f84804452abc925d94ef149d7da2e6fe7622b"
+    },
+    {
+      "file": "VN_RQ12_Category_Data_2025_11_18_2025_analysis (6).xlsx",
+      "rows": 5903,
+      "columns": 47,
+      "sha256": "a6873981823f0101ea3bd9d8fae227c52b2e517775642a4a5f0dd35596850780"
+    }
+  ],
+  "mapping": {
+    "title": "title",
+    "price": "price",
+    "brand": "brand",
+    "price_min": "min_price",
+    "price_max": "max_price",
+    "popularity": "monthly_sold",
+    "rating": "rating",
+    "image_brand": "brand_image_3_flash_thinking",
+    "text_brand": "brand_text_3_flash_thinking"
+  },
+  "raw_observations": 24896,
+  "unique_listings": 19686,
+  "vn_listings": 4956,
+  "vn_shops": 1017,
+  "coverage": [
+    {
+      "market": "Indonesia",
+      "observations": 8851,
+      "listings": 7233,
+      "shops": 1938,
+      "repeat_pct": 18.280420291492483
+    },
+    {
+      "market": "Vietnam",
+      "observations": 5903,
+      "listings": 4956,
+      "shops": 1017,
+      "repeat_pct": 16.042690157547014
+    },
+    {
+      "market": "Philippines",
+      "observations": 4265,
+      "listings": 3644,
+      "shops": 722,
+      "repeat_pct": 14.560375146541615
+    },
+    {
+      "market": "Malaysia",
+      "observations": 2328,
+      "listings": 1520,
+      "shops": 481,
+      "repeat_pct": 34.707903780068726
+    },
+    {
+      "market": "Thailand",
+      "observations": 2176,
+      "listings": 1257,
+      "shops": 285,
+      "repeat_pct": 42.23345588235294
+    },
+    {
+      "market": "Singapore",
+      "observations": 1373,
+      "listings": 1076,
+      "shops": 338,
+      "repeat_pct": 21.631463947560093
+    }
+  ],
+  "vn_valid_prices": 4955,
+  "vn_price_q25": 155000.0,
+  "vn_price_median": 260000.0,
+  "vn_price_q75": 390000.0,
+  "vn_price_conflicts": 1,
+  "vn_brand_known": 3820,
+  "top_brand": "bobby",
+  "top_brand_n": 376,
+  "top10_shop_share": 0.09887005649717515,
+  "eligible_units": 133,
+  "popularity_field": "monthly_sold",
+  "popularity_n": 4955,
+  "opportunity_segments": 45,
+  "top_opportunity": "bejoyle",
+  "annotation_pairs": 4723,
+  "annotation_agreement": 4031,
+  "matching": {
+    "eligible_pool": 119,
+    "candidate_pairs": 20,
+    "exact_title_candidates": 2,
+    "evaluation_status": "Not validated: manual labels required"
+  },
+  "pricing_case": {
+    "status": "ABSTAIN: no cohort with three distinct shops",
+    "orientation_brand": "bobby",
+    "orientation_shops": 142,
+    "orientation_q25": 151355.0,
+    "orientation_median": 269500.0,
+    "orientation_q75": 334250.0,
+    "cost_assumption": 162000,
+    "floor": 239000,
+    "fee_assumption": 0.12,
+    "margin_assumption": 0.2
+  },
+  "finance": {
+    "subscription": 99000,
+    "variable_cost": 20000,
+    "fixed_cost": 20000000,
+    "breakeven": 254,
+    "scenarios": [
+      {
+        "scenario": "Conservative",
+        "paid_accounts": 100,
+        "mrr": 9900000,
+        "arr_run_rate": 118800000,
+        "monthly_operating_result": -12100000
+      },
+      {
+        "scenario": "Base",
+        "paid_accounts": 500,
+        "mrr": 49500000,
+        "arr_run_rate": 594000000,
+        "monthly_operating_result": 19500000
+      },
+      {
+        "scenario": "Optimistic",
+        "paid_accounts": 1500,
+        "mrr": 148500000,
+        "arr_run_rate": 1782000000,
+        "monthly_operating_result": 98500000
+      }
+    ]
+  },
+  "variant_status": {
+    "Single recorded price": 1995,
+    "Known unequal / inconsistent price range": 2960,
+    "Unknown min/max": 1
+  },
+  "variant_spread_gt_2": 786,
+  "variant_spread_n": 4955,
+  "opportunity_stable_top10": 7,
+  "market_context": {
+    "gmv_2025_trillion_vnd": 429.7,
+    "gmv_yoy": 0.3475,
+    "active_sellers_2025": 601800,
+    "seller_yoy": -0.0743,
+    "source": "https://en.vcci.com.vn/economic-news/online-retail-sales-in-vietnam-jump-35-to-over-16-bln-in-2025-report-114817"
+  },
+  "brand_shop_leader": "bobby",
+  "brand_shop_leader_n": 142,
+  "validation_status": "Not conducted",
+  "figures": [
+    "01_coverage.png",
+    "02_quality.png",
+    "03_price.png",
+    "04_brands.png",
+    "05_concentration.png",
+    "06_brand_price.png",
+    "07_popularity.png",
+    "08_eligibility.png",
+    "09_unit_price.png",
+    "10_opportunity.png",
+    "11_pricing_case.png",
+    "12_finance.png",
+    "13_brand_agreement.png",
+    "14_repeats.png",
+    "15_variant_risk.png",
+    "16_variant_spread.png",
+    "17_opportunity_sensitivity.png",
+    "18_market_context.png",
+    "19_cost_sensitivity.png",
+    "20_brand_shops.png"
+  ]
+}
