@@ -1,0 +1,35 @@
+name: Audit source workbooks
+on:
+  push:
+    paths:
+      - '.github/workflows/data-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pandas openpyxl gdown
+      - name: Download original public dataset
+        run: |
+          mkdir -p data/raw
+          curl -fL --retry 2 --max-time 120 'https://www.kaggle.com/api/v1/datasets/download/johnphamed/shopee-diaper-listings-six-markets-november-2025' -o /tmp/source.zip && unzip -o /tmp/source.zip -d data/raw || gdown --folder 'https://drive.google.com/drive/folders/1-ynfBFXTlHJ6S4Hq52QEjfs0xSjga-N-' -O data/raw
+      - name: Inspect schema
+        run: |
+          python - <<'PY'
+          import pandas as pd
+          from pathlib import Path
+          for f in sorted(Path('data/raw').rglob('*.xlsx')):
+              x = pd.ExcelFile(f)
+              print(f.name, x.sheet_names)
+              d = pd.read_excel(f, sheet_name='Multi-Modal Comparison', dtype=str)
+              print(d.shape, d.columns.tolist())
+              print(d.head(2).to_string(index=False))
+          assert len(list(Path('data/raw').rglob('*.xlsx'))) == 6
+          PY
