@@ -11,7 +11,7 @@ permissions:
   contents: write
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +22,12 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python scripts/download_data.py
       - run: python scripts/run_notebook.py
-      - run: python -m playwright install chromium
+      - run: |
+          if command -v google-chrome >/dev/null || command -v google-chrome-stable >/dev/null || command -v chromium >/dev/null; then
+            echo 'Using runner browser'
+          else
+            python -m playwright install chromium
+          fi
       - run: python scripts/capture_mvp.py
       - name: Build office documents from notebook outputs
         run: python scripts/export_office.py
