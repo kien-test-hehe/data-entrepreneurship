@@ -1,0 +1,5 @@
+data/raw/
+outputs/private/
+__pycache__/
+.ipynb_checkpoints/
+.venv/
