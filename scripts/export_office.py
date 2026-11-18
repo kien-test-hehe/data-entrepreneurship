@@ -90,6 +90,9 @@ def narrative(sl,lines,top=2.1):
         txt(sl,4.15,y,8.1,1.12,v,19,NAVY)
 def chart_slide(i,section='Evidence'):
     key,title,finding,action=INS[i]
+    if key=='11_pricing_case' and 'orientation_brand' in case:
+        finding=f"ABSTAIN: no 3-shop SKU cohort. Broad {case['orientation_brand']} median: {fmt(case['orientation_median'])} VND. Illustrative floor: {fmt(case['floor'])} VND."
+        action='Withhold SKU advice. Verify comparable packs and refresh prices before choosing a test price.'
     src='Illustrative assumptions | ShopScope executed notebook' if key in ('12_finance','19_cost_sensitivity') else ('Metric via VCCI, 19 Jan 2026 | external market context' if key=='18_market_context' else SOURCE)
     sl=base(title,section,src)
     img=FIG/(key+'.png')
