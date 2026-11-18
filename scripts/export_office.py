@@ -108,7 +108,7 @@ def chart_slide(i,section='Evidence'):
     return sl
 sl=base('See the market. Sell smarter.','SHOP SCOPE / 01',dark=True)
 txt(sl,.8,2.1,8.9,1.15,'ShopScope',62,WHITE,True)
-txt(sl,.85,3.35,7.6,1.15,'Pricing intelligence for small e-commerce sellers.\nVietnam first. Southeast Asia next.',26,'DDE5EB')
+txt(sl,.85,3.35,8.1,1.15,'Pricing intelligence for small e-commerce sellers.\nVietnam first. Southeast Asia next.',21,'DDE5EB')
 for i,(x,y,w,h) in enumerate([(9.3,4.55,.65,1.05),(10.15,3.75,.65,1.85),(11,2.9,.65,2.7),(11.85,2.25,.65,3.35)]):rect(sl,x,y,w,h,ORANGE if i==3 else TEAL)
 txt(sl,.87,4.63,7.8,.28,'PROJECT TEAM',11,ORANGE,True)
 for j,(name,student_id) in enumerate(TEAM):
