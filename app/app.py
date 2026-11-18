@@ -10,10 +10,19 @@ if not (out/'private/vietnam_analysis.csv').exists():
     st.error('Run python scripts/download_data.py and python scripts/run_notebook.py locally first.');st.stop()
 d=pd.read_csv(out/'private/vietnam_analysis.csv',dtype={'shop_id':str,'product_id':str})
 e=json.loads((out/'evidence.json').read_text())
+st.sidebar.markdown('### ShopScope')
+st.sidebar.caption('Vietnam-first • historical research')
 view=st.sidebar.radio('Workspace',['Market overview','Product explorer','Competitor analysis','Price intelligence','Opportunity finder','Pricing advisor'])
 if view=='Market overview':
     a,b,c=st.columns(3);a.metric('Unique Vietnam listings',f"{e['vn_listings']:,}");b.metric('Observed shops',f"{e['vn_shops']:,}");c.metric('Historical median asking price',f"{e['vn_price_median']:,.0f} VND")
-    st.image(str(out/'figures/03_price.png'));st.image(str(out/'figures/05_concentration.png'));st.info('Listing counts are not market share. Prices are historical.')
+    left,right=st.columns(2)
+    with left:
+        st.subheader('Price landscape')
+        st.image(str(out/'figures/03_price.png'),use_container_width=True)
+    with right:
+        st.subheader('Seller structure')
+        st.image(str(out/'figures/05_concentration.png'),use_container_width=True)
+    st.info('Listing counts are not market share. Prices are historical.')
 elif view=='Product explorer':
     q=st.text_input('Search listing title');brands=sorted(d.brand.dropna().unique())
     selected=st.multiselect('Recorded brand',brands)
@@ -53,7 +62,12 @@ else:
     floor=math.ceil(cost/(1-fee-margin)/1000)*1000
     st.metric('Minimum viable asking price',f'{floor:,} VND')
     st.caption('Candidate cohort requires human verification of product line, variant and pack.')
-    if len(prices)<3:st.warning('ABSTAIN: fewer than three distinct comparable shops.')
+    if len(prices)<3:
+        st.warning('ABSTAIN: fewer than three distinct comparable shops.')
+        broad=d[d.brand.eq(row['brand'])].dropna(subset=['price']).groupby('shop_id').price.median()
+        if len(broad)>=3:
+            st.write(f'Broad brand orientation only: {len(broad)} shops, median {broad.median():,.0f} VND.')
+            st.caption('Different product lines and packs may be included; this is not a SKU benchmark.')
     else:
         lo,med,hi=prices.quantile([.25,.5,.75]);st.write(f'{len(prices)} shops | historical IQR: {lo:,.0f}–{hi:,.0f} VND | median {med:,.0f} VND')
         p=math.ceil(max(floor,lo)/1000)*1000

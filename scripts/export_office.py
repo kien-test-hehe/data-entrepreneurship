@@ -126,6 +126,15 @@ cards(sl,[('ELIGIBLE POOL',fmt(m['eligible_pool']),'Attribute-constrained candid
 chart_slide(12,'Trust and data quality')
 chart_slide(9,'Opportunity discovery')
 chart_slide(10,'Product demo')
+sl=base('Experience the ShopScope proof of concept','Actual product interface',SOURCE)
+ui=OUT/'mvp/overview.png'
+with Image.open(ui) as im: uw,uh=im.size
+uwidth=min(8.2,4.78*uw/uh);uheight=uwidth*uh/uw
+sl.shapes.add_picture(str(ui),I(.75+(8.2-uwidth)/2),I(2.05+(4.78-uheight)/2),width=I(uwidth),height=I(uheight))
+rect(sl,9.08,2.28,3.52,4.13,PALE,True)
+txt(sl,9.3,2.55,3.06,.5,'LIVE PROTOTYPE',13,ORANGE,True)
+txt(sl,9.3,3.03,3.06,2.0,'Six workspaces: overview, product search, competitor structure, price intelligence, opportunity finder and pricing advisor.',18,NAVY,True)
+txt(sl,9.3,5.35,3.06,.9,'Actual historical dataset. No live feed or validated SKU equivalence claimed.',14,TEAL)
 sl=base('A focused business, not another generic dashboard','Business model')
 cards(sl,[('FREE','0 VND','Limited searches and educational benchmarks.'),('PRO','99k VND','Proposed monthly price: comparison and pricing advisor.'),('BUSINESS','299k VND','Future premium tier; not yet validated.')])
 sl=base('Lean Canvas | a focused startup hypothesis','Business model')
@@ -152,6 +161,36 @@ txt(sl,.9,5.65,10.8,.72,'ShopScope  /  Vietnam first. Evidence before scale.',21
 for i in (3,5,6,8,13,14,15,16,17,18,19): chart_slide(i,'Appendix / analytical detail')
 sl=base('Evidence and interpretation notes','Appendix / sources')
 narrative(sl,[('Dataset','Easy Data, Shopee Diaper Listings: Six Markets, November 2025. Kaggle and publisher documentation; historical, filtered collection.'),('Market & competitor','VCCI (19 Jan 2026), Metric 2025 four-platform report; Metric public pricing page. See report for full URLs.'),('Status','No customer validation, licensed live feed or verified equivalent-SKU accuracy claimed. All financial assumptions are labeled.')])
+# Speaker notes and a stand-alone rehearsal script, sourced from the same evidence.
+core_notes=[
+"Open with the seller decision: finding a price that is both competitive and sustainable. ShopScope turns marketplace information into an action, not just a report.",
+"Imagine a small seller comparing diapers in multiple browser tabs. A lower package price may actually mean a higher price per diaper, and price without cost says nothing about margin. These pain points are hypotheses to validate.",
+"External context: Metric reported 429.7 trillion VND of GMV across four platforms in 2025, up 34.75%, while active seller count fell 7.43%. This motivates research but does not prove our solution.",
+"Start narrow: Vietnamese mother-and-baby sellers. The job is one recurring decision — compare offers and decide whether a proposed asking price is feasible.",
+INS[0][2]+" "+INS[0][3],
+"Explain the pipeline simply: clean listing keys, identify product attributes, retrieve candidates, and combine a price benchmark with a seller-specific cost floor.",
+INS[1][2]+" "+INS[1][3],
+INS[2][2]+" "+INS[2][3],
+INS[4][2]+" "+INS[4][3],
+INS[7][2]+" "+INS[7][3],
+f"We generated {m['candidate_pairs']} candidate pairs; {m['exact_title_candidates']} have identical normalized titles. No verified precision or recall is reported until people review the actual products.",
+INS[12][2]+" "+INS[12][3],
+INS[9][2]+" "+INS[9][3],
+INS[10][2]+" "+INS[10][3],
+"Show the actual Streamlit interface. Start with market overview, explore a brand, then enter cost and margin in Pricing Advisor. The system abstains if it cannot find adequate evidence.",
+"The proposed subscription price is 99,000 VND per month; free and future premium tiers are hypotheses. We do not claim existing paying users.",
+"Walk through Lean Canvas. The key link is customer pain → useful decision → measurable seller value → recurring subscription. Data rights and acquisition cost are essential assumptions.",
+"Market sizing should count potential customer accounts, not diaper GMV. The broad TAM ceiling is purely illustrative; SAM and SOM require verified eligible accounts and conversion evidence.",
+"Existing tools are credible alternatives. Our differentiation is proposed focus and affordability, not a claim of superior breadth. Interviews must test this.",
+"Three experiments: validate the problem with 15 interviews, test 10 paired tasks, and offer a paid pilot to 15 sellers. No results have been fabricated.",
+INS[11][2]+" "+INS[11][3],
+"Do not scale first. Complete reviewed matching pairs, seller experiments, and licensed data sourcing, then expand only if unit economics and retention support it.",
+"Close with an evidence-led ask: recruit 15 sellers and a data partner. We are building a responsible price decision workflow, not promising profit."
+]
+notes=core_notes+[INS[i][2]+" "+INS[i][3] for i in (3,5,6,8,13,14,15,16,17,18,19)]+["Reference the original Kaggle release, publisher documentation, VCCI market context, and Metric pricing. All analytical charts share the notebook evidence bundle."]
+assert len(notes)==len(prs.slides)
+for slide,note in zip(prs.slides,notes):slide.notes_slide.notes_text_frame.text=note
+(REPORT/'ShopScope_Pitch_Script.md').write_text('# ShopScope | English rehearsal script\n\n23 core slides; appendices for questions. Suggested timing: 12–15 minutes. Evidence ID: '+EVIDENCE_ID+'\n\n'+'\n\n'.join(f'## Slide {i+1:02d}\n\n{n}' for i,n in enumerate(notes)),encoding='utf-8')
 ppt=REPORT/'ShopScope_Startup_Pitch.pptx';prs.save(ppt)
 
 # Consulting-style Word report. Page-break controlled sections; charts share the notebook files.
@@ -215,6 +254,12 @@ sub('Why this is a data product')
 para('The underlying value is not the raw marketplace file. The transformation from inconsistent listings into a constrained, explainable pricing decision can save effort and reduce avoidable mistakes. The system abstains when evidence is inadequate rather than inventing an answer.')
 sub('Minimum viable scope')
 para('The local MVP focuses on market overview, listing exploration and the pricing advisor. Live crawling, payments, automated repricing, and broader geographic expansion are deliberately excluded until rights and customer value are established.')
+page('Product interface | Actual prototype')
+p=doc.add_paragraph();p.alignment=WD_ALIGN_PARAGRAPH.CENTER;p.add_run().add_picture(str(OUT/'mvp/overview.png'),width=Inches(6.65))
+p=para('Product screenshot. Actual local Streamlit Market Overview; generated from the executed notebook evidence.');p.runs[0].font.italic=True;p.runs[0].font.size=Pt(9)
+sub('How the six workspaces support decisions')
+table(['Workspace','Seller decision'],[['Market Overview','Orient to historical price and seller structure'],['Product Explorer','Search the observed catalog and inspect attributes'],['Competitor Analysis','Identify observed seller and brand concentration'],['Price Intelligence','Compare price ranges and variant risk'],['Opportunity Finder','Prioritize research by brand segments'],['Pricing Advisor','Check a margin-aware price floor; abstain when evidence is insufficient']])
+para('The application is a working local prototype. It does not provide verified live prices or automated repricing; the commercial product requires data rights, updated feeds and user testing.')
 page('3. Dataset and reproducibility')
 para('Easy Data released six Excel workbooks containing a historical collection dated November 18, 2025. All files use the Multi-Modal Comparison worksheet; Indonesia has 46 source columns and the other five have 47. The source contains filtered and sales-sorted collection views, so coverage is not representative of complete national demand.')
 table(['Market','Observations','Unique keys','Shop IDs'],[[r['market'],fmt(r['observations']),fmt(r['listings']),fmt(r['shops'])] for r in E['coverage']])
@@ -314,7 +359,7 @@ sub('Source file checksums')
 for f in E['files']:para(f["file"]+" | "+str(f["rows"])+" rows | SHA-256 "+f["sha256"])
 docx=REPORT/'ShopScope_Business_Report.docx';doc.save(docx)
 # Structural and evidence consistency checks. Rendering is performed separately in CI.
-assert len(Presentation(ppt).slides)==34
-assert len(Document(docx).inline_shapes)==20
+assert len(Presentation(ppt).slides)==35
+assert len(Document(docx).inline_shapes)==21
 assert len(E['figures'])==20
-print(f'Created {ppt.name} ({len(prs.slides)} slides), {docx.name} (20 shared charts). Evidence {EVIDENCE_ID}')
+print(f'Created {ppt.name} ({len(prs.slides)} slides), {docx.name} (20 shared charts and actual MVP screenshot). Evidence {EVIDENCE_ID}')

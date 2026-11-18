@@ -30,6 +30,5 @@ jobs:
               print(f.name, x.sheet_names)
               d = pd.read_excel(f, sheet_name='Multi-Modal Comparison', dtype=str)
               print(d.shape, d.columns.tolist())
-              print(d.head(2).to_string(index=False))
           assert len(list(Path('data/raw').rglob('*.xlsx'))) == 6
           PY

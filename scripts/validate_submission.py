@@ -13,9 +13,10 @@ assert len(e['figures'])==20 and all((out/'figures'/x).stat().st_size>1000 for x
 nb=nbformat.read(out/'ShopScope_Data_Analysis.executed.ipynb',as_version=4)
 assert all(c.execution_count is not None and not any(x.output_type=='error' for x in c.outputs) for c in nb.cells if c.cell_type=='code')
 p=reports/'ShopScope_Startup_Pitch.pptx'; d=reports/'ShopScope_Business_Report.docx'
-assert len(Presentation(p).slides)==34 and len(Document(d).inline_shapes)==20
+assert len(Presentation(p).slides)==35 and len(Document(d).inline_shapes)==21
 eid=hashlib.sha256((out/'evidence.json').read_bytes()).hexdigest()[:12]
 expected={hashlib.sha256((out/'figures'/n).read_bytes()).hexdigest() for n in e['figures']}
+expected.add(hashlib.sha256((out/'mvp/overview.png').read_bytes()).hexdigest())
 for file,folder in [(p,'ppt/media/'),(d,'word/media/')]:
     with zipfile.ZipFile(file) as z:
         assert z.testzip() is None
@@ -28,4 +29,4 @@ assert not app.exception, app.exception
 for view in ['Product explorer','Competitor analysis','Price intelligence','Opportunity finder','Pricing advisor']:
     app.sidebar.radio[0].set_value(view).run()
     assert not app.exception,(view,app.exception)
-print('PASS: source counts, executed notebook, 20 identical chart assets in both Office files, evidence ID and six MVP screens.')
+print('PASS: source counts, executed notebook, 20 identical chart assets plus actual MVP screenshot in both Office files, evidence ID and six MVP screens.')

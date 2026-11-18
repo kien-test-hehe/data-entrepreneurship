@@ -12,6 +12,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 python scripts/download_data.py
 python scripts/run_notebook.py
+python -m playwright install chromium
+python scripts/capture_mvp.py
 python scripts/export_office.py
 streamlit run app/app.py
 ```
@@ -20,8 +22,9 @@ On Windows activate with .venv\Scripts\activate. If automatic download fails, ma
 ## Deliverables
 - notebooks/ShopScope_Data_Analysis.ipynb — source notebook; executed copy in outputs.
 - outputs/evidence.json — single source of truth; file hashes, schema, metrics and figure manifest.
-- reports/ShopScope_Startup_Pitch.pptx — 22 main slides and 12 appendix slides.
-- reports/ShopScope_Business_Report.docx — English consulting-style report.
+- reports/ShopScope_Startup_Pitch.pptx — 23 main slides and 12 appendix slides.
+- reports/ShopScope_Business_Report.docx — English consulting-style report; actual MVP screenshot.
+- reports/ShopScope_Pitch_Script.md — English speaking notes and rehearsal script.
 - app/app.py — local six-screen Streamlit prototype.
 - business/validation.md — Test Cards, pilot design and labeling instructions.
 

@@ -22,6 +22,8 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python scripts/download_data.py
       - run: python scripts/run_notebook.py
+      - run: python -m playwright install chromium
+      - run: python scripts/capture_mvp.py
       - name: Build office documents from notebook outputs
         run: python scripts/export_office.py
       - name: Validate artifact structure, evidence and MVP
@@ -35,6 +37,7 @@ jobs:
             outputs/evidence.json
             outputs/figures/
             outputs/tables/
+            outputs/mvp/
             reports/
           if-no-files-found: error
       - name: Publish verified aggregate deliverables to the repository
@@ -47,7 +50,7 @@ jobs:
             echo "A newer source revision exists; artifact retained, publish skipped."
             exit 0
           fi
-          git add reports/ outputs/evidence.json outputs/figures/ outputs/tables/ outputs/ShopScope_Data_Analysis.executed.ipynb
+          git add reports/ outputs/evidence.json outputs/figures/ outputs/tables/ outputs/mvp/ outputs/ShopScope_Data_Analysis.executed.ipynb
           if ! git diff --cached --quiet; then
             git commit -m "Publish executed ShopScope submission [skip ci]"
             git push origin HEAD:main
