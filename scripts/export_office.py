@@ -26,6 +26,7 @@ SOURCE='Easy Data, Shopee diaper snapshot, 18 Nov 2025 | ShopScope executed note
 MARKET='https://en.vcci.com.vn/economic-news/online-retail-sales-in-vietnam-jump-35-to-over-16-bln-in-2025-report-114817'
 COMP='https://metric.vn/pricing'
 EVIDENCE_ID=hashlib.sha256((OUT/'evidence.json').read_bytes()).hexdigest()[:12]
+TEAM=[["Nguyễn Đức Anh","20262236M"],["Nguyễn Thị Thu Hiền","20262330M"],["Ngô Xuân Kiên","20262335M"],["Lê Lưu Ly","20262340M"]]
 INS=[
  ('01_coverage','Six markets; one historical snapshot',f"{fmt(E['raw_observations'])} observations reduce to {fmt(E['unique_listings'])} unique listing keys. Vietnam contributes {fmt(N)} distinct listings.",'Start with Vietnam; use other markets for localization research, not demand comparisons.'),
  ('02_quality','Data quality is a product feature',f"{fmt(E['vn_price_conflicts'])} Vietnam listing keys have conflicting positive price observations; {fmt(E['vn_brand_known'])} have usable source brand labels.",'Show confidence and coverage; do not hide uncertainty or fill unknown attributes with guesses.'),
@@ -107,8 +108,12 @@ def chart_slide(i,section='Evidence'):
     return sl
 sl=base('See the market. Sell smarter.','SHOP SCOPE / 01',dark=True)
 txt(sl,.8,2.1,8.9,1.15,'ShopScope',62,WHITE,True)
-txt(sl,.85,3.35,7.6,1.65,'Pricing intelligence for small e-commerce sellers.\nVietnam first. Southeast Asia next.',26,'DDE5EB')
+txt(sl,.85,3.35,7.6,1.15,'Pricing intelligence for small e-commerce sellers.\nVietnam first. Southeast Asia next.',26,'DDE5EB')
 for i,(x,y,w,h) in enumerate([(9.3,4.55,.65,1.05),(10.15,3.75,.65,1.85),(11,2.9,.65,2.7),(11.85,2.25,.65,3.35)]):rect(sl,x,y,w,h,ORANGE if i==3 else TEAL)
+txt(sl,.87,4.63,7.8,.28,'PROJECT TEAM',11,ORANGE,True)
+for j,(name,student_id) in enumerate(TEAM):
+    x=.87+(j%2)*4.05; y=4.99+(j//2)*.43
+    txt(sl,x,y,4.02,.38,f'{name}  |  {student_id}',13,WHITE)
 txt(sl,.87,6.05,8,.48,'DATA ENTREPRENEURSHIP  •  PROOF OF CONCEPT',15,ORANGE,True)
 sl=base('A small seller faces a big decision','Problem')
 narrative(sl,[('What should I sell?','Thousands of fragmented listings make competitor research slow.'),('What is a fair price?','Pack size, diaper type and variants make raw price comparisons misleading.'),('Can I earn a margin?','Without a cost floor, a competitive price may be economically unsustainable.')])
@@ -227,11 +232,15 @@ def figure(i):
     p=para('Figure '+str(i+1)+'. '+title+' — '+('Illustrative financial assumptions.' if key in ('12_finance','19_cost_sensitivity') else ('Metric via VCCI, 19 Jan 2026; external context.' if key=='18_market_context' else SOURCE)));p.runs[0].font.size=Pt(9);p.runs[0].italic=True
     para(finding);sub('Business implication');para(action)
 para('DATA ENTREPRENEURSHIP  /  STARTUP BUSINESS PLAN')
-p=doc.add_heading('ShopScope',0); p.paragraph_format.space_before=Pt(70); p.paragraph_format.space_after=Pt(20)
+p=doc.add_heading('ShopScope',0); p.paragraph_format.space_before=Pt(36); p.paragraph_format.space_after=Pt(15)
 p=para('See the market. Sell smarter.');p.runs[0].font.size=Pt(24);p.runs[0].font.color.rgb=DColor.from_string(ORANGE)
 para('A data-driven market intelligence platform for small e-commerce sellers in Southeast Asia — Vietnam diaper category proof of concept.')
 para('Business strategy • Data analytics • Decision support • Lean startup validation')
 para('November 2026 | Source snapshot: November 18, 2025')
+p=para('PROJECT TEAM');p.paragraph_format.space_after=Pt(3);p.runs[0].bold=True;p.runs[0].font.color.rgb=DColor.from_string(ORANGE)
+for name,student_id in TEAM:
+    p=para(f'{name}  |  {student_id}');p.paragraph_format.space_after=Pt(2);p.paragraph_format.line_spacing=1.05;p.runs[0].font.size=Pt(11)
+p.paragraph_format.space_after=Pt(10)
 table(['Proof-of-concept scope','Computed evidence'],[['Raw observations',fmt(E['raw_observations'])],['Unique listing keys',fmt(E['unique_listings'])],['Vietnam listings / shops',f'{fmt(N)} / {fmt(S)}'],['Evidence ID',EVIDENCE_ID]])
 para('Independent academic project. Not affiliated with or endorsed by Shopee. Customer research and commercial data rights remain open.')
 page('Executive summary')

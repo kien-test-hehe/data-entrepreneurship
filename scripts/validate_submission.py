@@ -14,6 +14,13 @@ nb=nbformat.read(out/'ShopScope_Data_Analysis.executed.ipynb',as_version=4)
 assert all(c.execution_count is not None and not any(x.output_type=='error' for x in c.outputs) for c in nb.cells if c.cell_type=='code')
 p=reports/'ShopScope_Startup_Pitch.pptx'; d=reports/'ShopScope_Business_Report.docx'
 assert len(Presentation(p).slides)==35 and len(Document(d).inline_shapes)==21
+team=[["Nguyễn Đức Anh","20262236M"],["Nguyễn Thị Thu Hiền","20262330M"],["Ngô Xuân Kiên","20262335M"],["Lê Lưu Ly","20262340M"]]
+cover_slide='\n'.join(sh.text for sh in Presentation(p).slides[0].shapes if sh.has_text_frame)
+cover_doc='\n'.join(x.text for x in Document(d).paragraphs).split('Executive summary')[0]
+cover_nb=nb.cells[0].source
+for cover in (cover_slide,cover_doc,cover_nb):
+    assert all(name in cover and sid in cover for name,sid in team)
+    assert [cover.index(name) for name,sid in team]==sorted(cover.index(name) for name,sid in team), 'Incorrect team ordering'
 eid=hashlib.sha256((out/'evidence.json').read_bytes()).hexdigest()[:12]
 expected={hashlib.sha256((out/'figures'/n).read_bytes()).hexdigest() for n in e['figures']}
 expected.add(hashlib.sha256((out/'mvp/overview.png').read_bytes()).hexdigest())
