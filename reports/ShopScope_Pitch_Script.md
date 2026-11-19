@@ -28,7 +28,7 @@ Explain the pipeline simply: clean listing keys, identify product attributes, re
 
 ## Slide 07
 
-1 Vietnam listing keys have conflicting positive price observations; 3,820 have usable source brand labels. Show confidence and coverage; do not hide uncertainty or fill unknown attributes with guesses.
+Conflicting positive price observations affect 1 Vietnam listing key(s); 3,820 have usable source brand labels. Show confidence and coverage; do not hide uncertainty or fill unknown attributes with guesses.
 
 ## Slide 08
 
@@ -44,7 +44,7 @@ Only 133 of 4,956 listings pass the conservative title and single-price screen (
 
 ## Slide 11
 
-We generated 20 candidate pairs; 2 have identical normalized titles. No verified precision or recall is reported until people review the actual products.
+Of 133 unit-price eligible listings, 14 lack a usable brand or title, leaving 119 in the matching pool. We generated 20 candidate pairs; 2 have identical normalized titles. No verified precision or recall is reported until people review the actual products.
 
 ## Slide 12
 
@@ -56,7 +56,7 @@ We generated 20 candidate pairs; 2 have identical normalized titles. No verified
 
 ## Slide 14
 
-Advisor result: ABSTAIN: no cohort with three distinct shops. Broad bobby orientation: 142 shops; median 269,500 VND. Assumed cost floor 239,000 VND. Not a matched SKU. Use a feasible test price, or reduce costs / differentiate. Verify the SKU and refresh market prices before acting.
+Advisor result: ABSTAIN: no cohort with three distinct shops. Broad bobby orientation: 142 shops; median 269,500 VND. Assumed cost floor 239,000 VND. Not a matched SKU. Illustrative unit cost 162,000 VND, fee 12%, margin 20%; divide by 1 minus fee and margin, round up to the nearest 1,000 VND. Withhold SKU advice when evidence is insufficient. Verify comparable packs and refresh prices before selecting a test price.
 
 ## Slide 15
 
@@ -76,7 +76,7 @@ Market sizing should count potential customer accounts, not diaper GMV. The broa
 
 ## Slide 19
 
-Existing tools are credible alternatives. Our differentiation is proposed focus and affordability, not a claim of superior breadth. Interviews must test this.
+Metric Starter Advanced costs VND 8M for four months (2M/month equivalent); Premium VND 12M for four months (3M/month equivalent), checked 19 November 2026. ShopScope’s proposed focus and affordability are not feature parity; interviews must test the difference.
 
 ## Slide 20
 
@@ -108,7 +108,7 @@ Brand-level medians and interquartile ranges show observed price positions for s
 
 ## Slide 27
 
-The chart includes only brand groups with at least five eligible listings; all others are withheld. Treat price-per-diaper estimates as indicative until a reviewer confirms the pack and selected variant.
+The chart shows up to 12 recorded brand groups with at least five eligible listings, ordered by eligible count. Treat price-per-diaper estimates as indicative until a reviewer confirms the pack and selected variant.
 
 ## Slide 28
 
