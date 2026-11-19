@@ -15,17 +15,17 @@
 - **A wide price band is not a price recommendation.** The historical median asking price is 260,000 VND; the middle half spans 155,000–390,000 VND. This is orientation across heterogeneous products, not an optimal SKU price.
 - **Competitive catalogs are uneven.** Top ten shops represent 9.9% of observed listings, not sales share. Compare direct competitors rather than simply copying the largest catalog.
 - **Reliable unit pricing requires abstention.** Explain the eligibility funnel. A large raw dataset does not imply many comparable variants. This motivates verified catalog enrichment.
-- **Find similar products. Admit uncertainty.** Exact titles provide a baseline; character TF-IDF generates ranked candidates under mandatory attribute constraints. A queue is not a labeled benchmark. Human evaluation is pending.
+- **Find similar products. Admit uncertainty.** Exact titles provide a baseline; character TF-IDF generates ranked candidates under mandatory attribute constraints. 133 unit-price eligible listings become 119 matching-pool listings after 14 exclusions lacking brand or title. The 20 pairs are not listings. A queue is not a labeled benchmark. Human evaluation is pending.
 - **Multimodal labels are not ground truth.** Image/text agreement is a consistency signal, not accuracy. Disagreements prioritize review.
 - **Prioritize research, not inventory bets.** Screen observed brand-level popularity and shop counts; inspect weighting sensitivity. Not demand or a guaranteed investment.
-- **A recommendation must respect margin.** Demo the local Streamlit Pricing Advisor. Select a historical product, enter cost, fees and margin. Show the floor and explain ABSTAIN if comparable evidence is insufficient. The alternative brand benchmark is orientation only. A hypothetical 150,000 VND cost, 12% fee, 20% margin gives a rounded 221,000 VND floor, not a market quote.
+- **A recommendation must respect margin.** Demo the local Streamlit Pricing Advisor. Select a historical product, enter cost, fees and margin. Show the floor and explain ABSTAIN if comparable evidence is insufficient. The alternative brand benchmark is orientation only. The notebook example assumes 162,000 VND cost, 12% fee, 20% margin and rounds the calculated 238,235.29 VND floor up to 239,000 VND; not a market quote.
 - **Experience ShopScope.** Demonstrate overview, explorer, competitor analysis, price intelligence, opportunity finder and pricing advisor. Historical dataset only.
 
 ## Entrepreneurship (4:00)
 - **Business model.** Freemium, proposed Pro at 99,000 VND/month, future Business at 299,000. Test pricing rather than claiming revenue.
 - **Lean Canvas.** One seller decision and one category. Metrics: time saved, matching precision, paid conversion. Verified localized product data and corrections could become an advantage, not a proven moat.
 - **Size in seller accounts, not GMV.** The all-seller annual subscription calculation is an optimistic ceiling, not measured TAM. Validate eligible accounts, SAM, acquisition and retention.
-- **Competitive positioning.** Established analytics providers and manual tools are alternatives. Our proposed wedge is a narrow, explainable pricing workflow. Actual differentiation remains to be tested.
+- **Competitive positioning.** Established analytics providers and manual tools are alternatives. Metric Starter Advanced: VND 8M/4 months (2M/month equivalent); Premium: VND 12M/4 months (3M/month equivalent), checked 19 November 2026. Our proposed wedge is a narrow, explainable pricing workflow. Actual differentiation remains to be tested.
 - **Test before scaling.** Recruit 15 sellers for interviews, 10 for paired tasks, and 15 for paid offers. Thresholds: 10/15 report recurring pain, 50% median time reduction without lower accuracy, and 3 real paid commitments. Nothing is claimed as conducted.
 - **Unit economics.** Assumed subscription 99,000 VND, variable cost 20,000 and fixed cost 20 million imply 254 paid accounts at operating break-even. Actual data costs, CAC and churn can change this substantially.
 

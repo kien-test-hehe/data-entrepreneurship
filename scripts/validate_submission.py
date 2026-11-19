@@ -1,5 +1,5 @@
 from pathlib import Path
-import json, hashlib, zipfile
+import json, hashlib, zipfile, re, math
 from pptx import Presentation
 from docx import Document
 import nbformat
@@ -21,6 +21,13 @@ cover_nb=nb.cells[0].source
 for cover in (cover_slide,cover_doc,cover_nb):
     assert all(name in cover and sid in cover for name,sid in team)
     assert [cover.index(name) for name,sid in team]==sorted(cover.index(name) for name,sid in team), 'Incorrect team ordering'
+# Regression checks for reviewer feedback.
+paragraphs=[x.text for x in Document(d).paragraphs]
+assert [int(re.match(r'Figure (\d+)\.',x).group(1)) for x in paragraphs if re.match(r'Figure (\d+)\.',x)]==list(range(1,21))
+assert e['eligible_units']-e['matching']['eligible_pool']==14
+c=e['pricing_case']; assert math.ceil(c['cost_assumption']/(1-c['fee_assumption']-c['margin_assumption'])/1000)*1000==c['floor']
+for phrase in ('162,000','239,000','12%','20%','VND 8 million','VND 12 million','119'):
+    assert phrase in '\n'.join(paragraphs), phrase
 eid=hashlib.sha256((out/'evidence.json').read_bytes()).hexdigest()[:12]
 expected={hashlib.sha256((out/'figures'/n).read_bytes()).hexdigest() for n in e['figures']}
 expected.add(hashlib.sha256((out/'mvp/overview.png').read_bytes()).hexdigest())

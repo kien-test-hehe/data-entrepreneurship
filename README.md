@@ -108,7 +108,7 @@ Vietnam is our initial market; Indonesia, Philippines, Malaysia, Thailand and Si
 
 <img src="outputs/figures/08_eligibility.png" alt="Conservative unit price eligibility funnel">
 
-**Quality limits comparability.** Only **133** listings meet conservative unit-price eligibility criteria. A large dataset does not automatically produce reliable SKU benchmarks.
+**Quality limits comparability.** Only **133** listings meet conservative unit-price eligibility criteria; **119** also have recorded brand and title (14 exclusions), yielding 20 cross-shop candidate pairs for manual review. A large dataset does not automatically produce reliable SKU benchmarks.
 
 </td>
 </tr>
@@ -124,7 +124,7 @@ The Pricing Advisor combines a seller's costs with market evidence. Its minimum 
 Minimum price = fixed cost per unit / (1 - variable fee rate - target margin rate)
 ```
 
-For example, an assumed unit cost of VND 162,000, a 12% variable fee and a 20% target margin produce a rounded price floor of **VND 239,000**. This is an illustrative cost calculation, not an observed selling price.
+For example, an assumed unit cost of VND 162,000 (60% of the broad Bobby shop-median, rounded), a 12% variable fee and a 20% target margin produce a rounded price floor of **VND 239,000**. This is an illustrative cost calculation, not an observed selling price.
 
 The actual historical data did **not** yield a sufficiently supported equivalent-product cohort with three distinct shops under the conservative rules. ShopScope therefore returns **ABSTAIN** rather than presenting an unreliable SKU recommendation.
 
@@ -149,6 +149,8 @@ The notebook is the analytical source of truth. It exports the figures and evide
 **Stack:** Python · Pandas · NumPy · Matplotlib · Scikit-learn · Jupyter · Streamlit · python-pptx · python-docx · GitHub Actions.
 
 ## 7. The startup opportunity
+
+Metric Starter pricing checked 19 November 2026: Advanced VND 8M for four months (2M/month equivalent); Premium VND 12M for four months (3M/month equivalent). ShopScope is a narrower proposed offering, not feature parity.
 
 | Business dimension | Proposed strategy |
 | --- | --- |

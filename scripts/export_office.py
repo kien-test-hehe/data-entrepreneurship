@@ -29,16 +29,16 @@ EVIDENCE_ID=hashlib.sha256((OUT/'evidence.json').read_bytes()).hexdigest()[:12]
 TEAM=[["Nguyễn Đức Anh","20262236M"],["Nguyễn Thị Thu Hiền","20262330M"],["Ngô Xuân Kiên","20262335M"],["Lê Lưu Ly","20262340M"]]
 INS=[
  ('01_coverage','Six markets; one historical snapshot',f"{fmt(E['raw_observations'])} observations reduce to {fmt(E['unique_listings'])} unique listing keys. Vietnam contributes {fmt(N)} distinct listings.",'Start with Vietnam; use other markets for localization research, not demand comparisons.'),
- ('02_quality','Data quality is a product feature',f"{fmt(E['vn_price_conflicts'])} Vietnam listing keys have conflicting positive price observations; {fmt(E['vn_brand_known'])} have usable source brand labels.",'Show confidence and coverage; do not hide uncertainty or fill unknown attributes with guesses.'),
+ ('02_quality','Data quality is a product feature',f"Conflicting positive price observations affect {fmt(E['vn_price_conflicts'])} Vietnam listing key(s); {fmt(E['vn_brand_known'])} have usable source brand labels.",'Show confidence and coverage; do not hide uncertainty or fill unknown attributes with guesses.'),
  ('03_price','A wide price band is not a price recommendation',f"Median observed asking price: {fmt(E['vn_price_median'])} VND (n={fmt(E['vn_valid_prices'])}); interquartile band {fmt(E['vn_price_q25'])}–{fmt(E['vn_price_q75'])} VND.",'Use this for orientation only. Compare equivalent product packs before deciding a selling price.'),
  ('04_brands','Brand presence reveals competitors',f"The most frequent usable raw brand label is {E['top_brand'] or 'unavailable'} ({fmt(E['top_brand_n'])} listings).",'Explore positioning within a brand; listing frequency is not market share or brand revenue.'),
  ('05_concentration','Competitive catalogs are uneven',f"The ten largest observed shops by listing count contribute {pct(E['top10_shop_share'])} of Vietnamese unique listings.",'Review these catalogs for assortment patterns; keep shop counts separate from company counts.'),
  ('06_brand_price','Control for product mix before pricing','Brand-level medians and interquartile ranges show observed price positions for sufficiently represented raw labels.','Do not interpret price differences as brand premiums without controlling for variants and pack sizes.'),
  ('07_popularity','Popularity is a signal, not a sales forecast',f"{fmt(E['popularity_n'])} listings have both usable prices and the source field {E['popularity_field']}.",'Investigate counter patterns; do not multiply the counter by asking price to claim revenue.'),
  ('08_eligibility','Reliable unit pricing requires abstention',f"Only {fmt(E['eligible_units'])} of {fmt(N)} listings pass the conservative title and single-price screen ({pct(E['eligible_units']/N)}).",'Confirm exact pack and variant manually. A smaller trustworthy benchmark is better than a broad misleading one.'),
- ('09_unit_price','Unit-price comparison can clarify value','The chart includes only brand groups with at least five eligible listings; all others are withheld.','Treat price-per-diaper estimates as indicative until a reviewer confirms the pack and selected variant.'),
+ ('09_unit_price','Unit-price comparison can clarify value','The chart shows up to 12 recorded brand groups with at least five eligible listings, ordered by eligible count.','Treat price-per-diaper estimates as indicative until a reviewer confirms the pack and selected variant.'),
  ('10_opportunity','Prioritize research, not inventory bets',f"{E['opportunity_segments']} segments pass the minimum size and shop thresholds. Top heuristic segment: {E['top_opportunity'] or 'none supported'}.",'Check supplier cost, product suitability and customer demand before committing capital.'),
- ('11_pricing_case','A recommendation must respect margin',f"Advisor result: {case['status']}. "+(f"Historical cohort: {case['brand']}, {case['size']}, {case['type']}, {case['quantity']} pieces; {case['shops']} shops. Cost assumption: {fmt(case['cost_assumption'])} VND; floor: {fmt(case['floor'])} VND." if 'shops' in case else (f"Broad {case['orientation_brand']} orientation: {case['orientation_shops']} shops; median {fmt(case['orientation_median'])} VND. Assumed cost floor {fmt(case['floor'])} VND. Not a matched SKU." if 'orientation_brand' in case else 'A reliable cross-shop exact-title cohort was not available.')),'Use a feasible test price, or reduce costs / differentiate. Verify the SKU and refresh market prices before acting.'),
+ ('11_pricing_case','A recommendation must respect margin',f"Advisor result: {case['status']}. "+(f"Historical cohort: {case['brand']}, {case['size']}, {case['type']}, {case['quantity']} pieces; {case['shops']} shops. Cost assumption: {fmt(case['cost_assumption'])} VND; floor: {fmt(case['floor'])} VND." if 'shops' in case else (f"Broad {case['orientation_brand']} orientation: {case['orientation_shops']} shops; median {fmt(case['orientation_median'])} VND. Assumed cost floor {fmt(case['floor'])} VND. Not a matched SKU." if 'orientation_brand' in case else 'A reliable cross-shop exact-title cohort was not available.')),'Withhold SKU advice when evidence is insufficient. Verify comparable packs and refresh prices before selecting a test price.'),
  ('12_finance','Recurring revenue needs viable unit economics',f"At 99,000 VND/month, 20,000 VND variable cost and 20 million VND fixed monthly cost, operating break-even is {finance['breakeven']} paying accounts.",'Validate willingness to pay and actual licensing costs. This is an assumption-driven scenario, not traction.'),
  ('13_brand_agreement','Multimodal labels are not ground truth',f"{fmt(E['annotation_agreement'])} of {fmt(E['annotation_pairs'])} usable image/text annotation pairs agree.",'Route disagreements and missing labels to a reviewer; agreement does not establish correctness.'),
  ('14_repeats','Repeated observations are not extra products','Repeat-key rates differ by country because the collection uses overlapping filtered views.','Deduplicate keys before counting listings or comparing observed coverage.'),
@@ -92,7 +92,7 @@ def narrative(sl,lines,top=2.1):
 def chart_slide(i,section='Evidence'):
     key,title,finding,action=INS[i]
     if key=='11_pricing_case' and 'orientation_brand' in case:
-        finding=f"ABSTAIN: no 3-shop SKU cohort. Broad {case['orientation_brand']} median: {fmt(case['orientation_median'])} VND. Illustrative floor: {fmt(case['floor'])} VND."
+        finding=f"ABSTAIN: no 3-shop SKU cohort. Assumed cost {fmt(case['cost_assumption'])} VND; fee {case['fee_assumption']:.0%}; margin {case['margin_assumption']:.0%}. Rounded floor: {fmt(case['floor'])} VND."
         action='Withhold SKU advice. Verify comparable packs and refresh prices before choosing a test price.'
     src='Illustrative assumptions | ShopScope executed notebook' if key in ('12_finance','19_cost_sensitivity') else ('Metric via VCCI, 19 Jan 2026 | external market context' if key=='18_market_context' else SOURCE)
     sl=base(title,section,src)
@@ -101,9 +101,9 @@ def chart_slide(i,section='Evidence'):
     ww=min(7.55,4.55*w/h);hh=ww*h/w
     sl.shapes.add_picture(str(img),I(.75+(7.55-ww)/2),I(2.08+(4.55-hh)/2),width=I(ww),height=I(hh))
     rect(sl,8.58,2.18,4.02,4.43,PALE,True)
-    txt(sl,8.82,2.4,3.54,.35,'WHAT THE DATA SAYS',12,ORANGE,True)
+    txt(sl,8.82,2.4,3.54,.35,('ILLUSTRATIVE SCENARIO' if key in ('12_finance','19_cost_sensitivity') else 'EVIDENCE + ASSUMPTIONS' if key=='11_pricing_case' else 'EXTERNAL CONTEXT' if key=='18_market_context' else 'WHAT THE DATA SAYS'),12,ORANGE,True)
     txt(sl,8.82,2.86,3.54,1.55,finding,17,NAVY,True)
-    txt(sl,8.82,4.56,3.54,.34,'SELLER ACTION',12,TEAL,True)
+    txt(sl,8.82,4.56,3.54,.34,('NEXT BUSINESS STEP' if key in ('12_finance','19_cost_sensitivity','18_market_context') else 'SELLER ACTION'),12,TEAL,True)
     txt(sl,8.82,5.02,3.54,1.35,action,15,NAVY)
     return sl
 sl=base('See the market. Sell smarter.','SHOP SCOPE / 01',dark=True)
@@ -130,7 +130,7 @@ chart_slide(4)
 chart_slide(7)
 sl=base('Find similar products. Admit uncertainty.','Matching engine',SOURCE)
 m=E['matching']
-cards(sl,[('ELIGIBLE POOL',fmt(m['eligible_pool']),'Attribute-constrained candidates; no claim of exact equivalence.'),('REVIEW QUEUE',fmt(m['candidate_pairs']),'Pairs produced for independent human labeling.'),('EVALUATION','Pending' if m['evaluation_status'].startswith('Not validated') else 'Reviewed','Exact title vs. char TF-IDF. '+m['evaluation_status'])])
+cards(sl,[('ELIGIBLE POOL',fmt(m['eligible_pool']),f"Of {fmt(E['eligible_units'])} unit-price eligible listings, {fmt(E['eligible_units']-m['eligible_pool'])} lack brand or title."),('REVIEW QUEUE',fmt(m['candidate_pairs']),'Pairs produced for independent human labeling.'),('EVALUATION','Pending' if m['evaluation_status'].startswith('Not validated') else 'Reviewed','Exact title vs. char TF-IDF. '+m['evaluation_status'])])
 chart_slide(12,'Trust and data quality')
 chart_slide(9,'Opportunity discovery')
 chart_slide(10,'Product demo')
@@ -155,9 +155,9 @@ for i,(k,v) in enumerate(canvas):
 sl=base('Size the business in seller accounts, not GMV','Addressable market')
 cards(sl,[('TAM CEILING','714.9B VND','Illustrative annualized ceiling: 601,800 reported seller accounts × 99k × 12; not a measured TAM.'),('SAM','To validate','Reachable small sellers in the initial category; no verified count.'),('SOM','Pilot first','Obtain 3 paid commitments, then measure acquisition and retention.')])
 sl=base('Our position: simple, localized, decision-first','Competition','Metric pricing page | metric.vn/pricing | proposed ShopScope positioning')
-narrative(sl,[('Metric / broad analytics','Established market and shop intelligence; Advanced list price is around 1.5M VND/month equivalent.'),('Seller Centre / sheets','Existing platform workflows and manual research; actual feature overlap requires user testing.'),('ShopScope / niche','Our proposed wedge is a lower-cost, SKU-level price workflow. Not proven differentiation yet.')])
+narrative(sl,[('Metric / broad analytics','Metric Starter Advanced: VND 8M/4 months (2M/month equivalent); Premium: VND 12M/4 months (3M/month equivalent). Checked 19 Nov 2026.'),('Seller Centre / sheets','Existing platform workflows and manual research; actual feature overlap requires user testing.'),('ShopScope / niche','Our proposed wedge is a lower-cost, SKU-level price workflow. Not proven differentiation yet.')])
 sl=base('Test the business before scaling it','Lean startup')
-cards(sl,[('PROBLEM','15 interviews','Target: 10/15 confirm repeated pricing pain. Owner: Business lead.'),('PRODUCT','10 paired tasks','Target: 50% faster median time with no quality loss. Owner: Product lead.'),('REVENUE','15 offers','Target: 3 paid-pilot commitments at 99k VND. Owner: Growth lead.')])
+cards(sl,[('PROBLEM','15 interviews','Target: 10/15 confirm repeated pricing pain. Owner: Business lead.'),('PRODUCT','10 paired tasks','Target: median completion time down at least 50%, no lower accuracy. Owner: Product lead.'),('REVENUE','15 offers','Target: 3 paid-pilot commitments at 99k VND. Owner: Growth lead.')])
 chart_slide(11,'Financial feasibility')
 sl=base('A gated roadmap protects the startup','Execution')
 narrative(sl,[('Now | classroom pilot','Run the historical proof of concept; complete seller interviews and reviewed product pairs.'),('Next | data rights & refresh','Negotiate licensed recurring data, validate unit economics and pilot with real sellers.'),('Later | expand','Add categories and countries only after matching, retention and recurring acquisition costs work.')])
@@ -181,15 +181,15 @@ INS[1][2]+" "+INS[1][3],
 INS[2][2]+" "+INS[2][3],
 INS[4][2]+" "+INS[4][3],
 INS[7][2]+" "+INS[7][3],
-f"We generated {m['candidate_pairs']} candidate pairs; {m['exact_title_candidates']} have identical normalized titles. No verified precision or recall is reported until people review the actual products.",
+f"Of {E['eligible_units']} unit-price eligible listings, {E['eligible_units']-m['eligible_pool']} lack a usable brand or title, leaving {m['eligible_pool']} in the matching pool. We generated {m['candidate_pairs']} candidate pairs; {m['exact_title_candidates']} have identical normalized titles. No verified precision or recall is reported until people review the actual products.",
 INS[12][2]+" "+INS[12][3],
 INS[9][2]+" "+INS[9][3],
-INS[10][2]+" "+INS[10][3],
+INS[10][2]+f" Illustrative unit cost {fmt(case['cost_assumption'])} VND, fee {case['fee_assumption']:.0%}, margin {case['margin_assumption']:.0%}; divide by 1 minus fee and margin, round up to the nearest 1,000 VND. "+INS[10][3],
 "Show the actual Streamlit interface. Start with market overview, explore a brand, then enter cost and margin in Pricing Advisor. The system abstains if it cannot find adequate evidence.",
 "The proposed subscription price is 99,000 VND per month; free and future premium tiers are hypotheses. We do not claim existing paying users.",
 "Walk through Lean Canvas. The key link is customer pain → useful decision → measurable seller value → recurring subscription. Data rights and acquisition cost are essential assumptions.",
 "Market sizing should count potential customer accounts, not diaper GMV. The broad TAM ceiling is purely illustrative; SAM and SOM require verified eligible accounts and conversion evidence.",
-"Existing tools are credible alternatives. Our differentiation is proposed focus and affordability, not a claim of superior breadth. Interviews must test this.",
+"Metric Starter Advanced costs VND 8M for four months (2M/month equivalent); Premium VND 12M for four months (3M/month equivalent), checked 19 November 2026. ShopScope’s proposed focus and affordability are not feature parity; interviews must test the difference.",
 "Three experiments: validate the problem with 15 interviews, test 10 paired tasks, and offer a paid pilot to 15 sellers. No results have been fabricated.",
 INS[11][2]+" "+INS[11][3],
 "Do not scale first. Complete reviewed matching pairs, seller experiments, and licensed data sourcing, then expand only if unit economics and retention support it.",
@@ -229,7 +229,7 @@ def figure(i):
     key,title,finding,action=INS[i]
     p=doc.add_paragraph();p.alignment=WD_ALIGN_PARAGRAPH.CENTER
     p.add_run().add_picture(str(FIG/(key+'.png')),width=Inches(6.55))
-    p=para('Figure '+str(i+1)+'. '+title+' — '+('Illustrative financial assumptions.' if key in ('12_finance','19_cost_sensitivity') else ('Metric via VCCI, 19 Jan 2026; external context.' if key=='18_market_context' else SOURCE)));p.runs[0].font.size=Pt(9);p.runs[0].italic=True
+    p=para('Figure '+str(len(doc.inline_shapes)-1)+'. '+title+' — '+('Illustrative financial assumptions.' if key in ('12_finance','19_cost_sensitivity') else ('Metric via VCCI, 19 Jan 2026; external context.' if key=='18_market_context' else (SOURCE+' | Illustrative cost assumptions' if key=='11_pricing_case' else SOURCE))));p.runs[0].font.size=Pt(9);p.runs[0].italic=True
     para(finding);sub('Business implication');para(action)
 para('DATA ENTREPRENEURSHIP  /  STARTUP BUSINESS PLAN')
 p=doc.add_heading('ShopScope',0); p.paragraph_format.space_before=Pt(36); p.paragraph_format.space_after=Pt(15)
@@ -265,7 +265,7 @@ para('Original workbooks → validation and deduplication → normalized product
 sub('Why this is a data product')
 para('The underlying value is not the raw marketplace file. The transformation from inconsistent listings into a constrained, explainable pricing decision can save effort and reduce avoidable mistakes. The system abstains when evidence is inadequate rather than inventing an answer.')
 sub('Minimum viable scope')
-para('The local MVP focuses on market overview, listing exploration and the pricing advisor. Live crawling, payments, automated repricing, and broader geographic expansion are deliberately excluded until rights and customer value are established.')
+para('The local MVP has six workspaces: market overview, product explorer, competitor analysis, price intelligence, opportunity finder and pricing advisor. Live crawling, payments, automated repricing, and broader geographic expansion are deliberately excluded until rights and customer value are established.')
 page('Product interface | Actual prototype')
 p=doc.add_paragraph();p.alignment=WD_ALIGN_PARAGRAPH.CENTER;p.add_run().add_picture(str(OUT/'mvp/overview.png'),width=Inches(6.65))
 p=para('Product screenshot. Actual local Streamlit Market Overview; generated from the executed notebook evidence.');p.runs[0].font.italic=True;p.runs[0].font.size=Pt(9)
@@ -308,9 +308,10 @@ figure(12)
 para('The image-based and text-based labels were generated by the data publisher. Exact normalized agreement is a useful consistency check but is not a measured classification accuracy. Future human review should include cases where the two sources agree as well as disagree.')
 page('14. Matching experiment')
 para('Exact normalized titles form a strict baseline. Character n-gram TF-IDF ranks candidates within identical recorded brand, type, size and pack quantity, excluding the same shop. These candidates are provisional; they may differ in product line or physical variant.')
+para(f"Filtering funnel: {fmt(N)} Vietnam listings → {fmt(E['eligible_units'])} unit-price eligible → {fmt(m['eligible_pool'])} matching-pool listings. The {fmt(E['eligible_units']-m['eligible_pool'])} exclusions lack a usable brand or title; {fmt(m['candidate_pairs'])} candidate pairs are generated, not additional listings.")
 table(['Measure','Computed result'],[['Eligible candidate pool',m['eligible_pool']],['Candidate pairs queued',m['candidate_pairs']],['Exact-title candidates',m['exact_title_candidates']],['Accuracy evaluation status',m['evaluation_status']]])
 sub('Evaluation design')
-para('Two reviewers should label up to 300 candidate pairs as equivalent, non-equivalent or unclear, using title and packaging evidence. Resolve disagreements before calculating precision, recall on reviewed candidates and F1. A candidate-only sample cannot estimate full-catalog retrieval recall; a separately labeled query set is necessary for that claim. Avoid leakage by keeping listing keys separate across evaluation and tuning.')
+para('Two reviewers should label the current 20 candidate pairs (up to 300 as the queue expands) as equivalent, non-equivalent or unclear, using title and packaging evidence. Resolve disagreements before calculating precision, recall on reviewed candidates and F1. A candidate-only sample cannot estimate full-catalog retrieval recall; a separately labeled query set is necessary for that claim. Avoid leakage by keeping listing keys separate across evaluation and tuning.')
 sub('Release gate')
 para('Require at least 90% precision on a held-out reviewed subset, with coverage and abstention rate reported. This is a target, not an achieved metric. Until it is met, display candidates as review-required rather than verified equivalents.')
 page('15. Opportunity discovery')
@@ -319,11 +320,12 @@ para('Segments are grouped by recorded source brand (minimum 20 listings and thr
 page('16. Margin-aware pricing advisor')
 figure(10)
 sub('Decision rule')
-para('Minimum viable price = fixed cost per selling unit / (1 − variable fee rate − target contribution margin). Round up to the nearest 1,000 VND. Compare the floor with the historical interquartile price band, require three distinct comparable shops, and abstain when there is insufficient evidence. Costs, fee rates and margin targets are user inputs, not inferred seller profits.')
+para('Minimum viable price = fixed cost per selling unit / (1 − variable fee rate − target contribution margin). Round up to the nearest 1,000 VND. Require three distinct comparable shops before using a SKU price band; otherwise abstain.')
+para(f"Illustrative inputs: unit cost {fmt(case['cost_assumption'])} VND (60% of the broad brand median, rounded to the nearest thousand), variable fee {case['fee_assumption']:.0%}, target contribution margin {case['margin_assumption']:.0%}. {fmt(case['cost_assumption'])} / (1 − {case['fee_assumption']:.2f} − {case['margin_assumption']:.2f}) = {case['cost_assumption']/(1-case['fee_assumption']-case['margin_assumption']):,.2f} VND; rounded up = {fmt(case['floor'])} VND. Not observed seller costs or a recommended SKU price.")
 page('17. Lean Canvas and competitive positioning')
 table(['Canvas element','ShopScope hypothesis'],[['Problem','Manual research, misleading comparisons and uncertain margin'],['Customer segments','Small Vietnamese online sellers; initial mother-and-baby category'],['Unique value proposition','Actionable, confidence-aware pricing intelligence'],['Solution','Product candidate matching, benchmarks and cost floor'],['Channels','Seller groups, training partners and direct outreach'],['Revenue streams','Monthly subscriptions; optional advanced reports'],['Cost structure','Data acquisition, development, hosting, support and marketing'],['Key metrics','Time saved, match precision, activation, conversion, retention'],['Potential advantage','Localized labels and seller feedback accumulated with permission']])
 sub('Alternatives and differentiation')
-para('Metric and YouNet ECI provide established market intelligence; Seller Centre and spreadsheets are common workflow alternatives. Metric’s public Advanced plan lists around 1.5 million VND/month equivalent, though packages and prices vary. ShopScope proposes a narrower low-cost decision workflow, not feature parity. Interviews must establish whether the difference matters.')
+para('Metric and YouNet ECI provide established market intelligence; Seller Centre and spreadsheets are common workflow alternatives. Metric’s Starter Advanced plan lists VND 8 million for four months (VND 2 million/month equivalent); Premium lists VND 12 million for four months (VND 3 million/month equivalent). Prices checked 19 November 2026; packages may change. ShopScope proposes a narrower low-cost decision workflow, not feature parity. Interviews must establish whether the difference matters.')
 page('18. Business model and addressable market')
 para('The proposed freemium strategy offers limited educational searches, a 99,000 VND/month Pro tier and a future 299,000 VND/month Business tier. These are willingness-to-pay hypotheses, not confirmed prices.')
 table(['Tier','Price hypothesis','Value'],[['Free','0 VND','Limited exploration'],['Pro','99,000 VND/month','Comparisons and pricing advisor'],['Business','299,000 VND/month','Future multi-category reports']])
@@ -353,7 +355,7 @@ def small_figure(i):
     key,title,finding,action=INS[i]
     p=doc.add_paragraph();p.alignment=WD_ALIGN_PARAGRAPH.CENTER
     p.add_run().add_picture(str(FIG/(key+'.png')),width=Inches(4.9))
-    p=para('Figure '+str(i+1)+'. '+title+' — '+('Illustrative scenario.' if key=='19_cost_sensitivity' else ('External context: Metric via VCCI.' if key=='18_market_context' else SOURCE)))
+    p=para('Figure '+str(len(doc.inline_shapes)-1)+'. '+title+' — '+('Illustrative scenario.' if key=='19_cost_sensitivity' else ('External context: Metric via VCCI.' if key=='18_market_context' else SOURCE)))
     p.runs[0].font.size=Pt(9);p.runs[0].italic=True
     para(finding)
 page('Appendix A. Collection and variant risk')
@@ -366,7 +368,7 @@ page('Appendix D. Brand competition')
 small_figure(19)
 para('Use distinct shop counts as a second lens alongside listing counts. A brand with many observed shops may have broader distribution, but this snapshot cannot establish verified market penetration.')
 page('References and evidence provenance')
-for s in [f"Easy Data. (2025). Shopee Diaper Listings: Six Markets, November 2025. Kaggle. {E['source_url']}",f"Easy Data. Marketplace Datasets and Data Quality Guides. {E['publisher_url']}",f"VCCI. (2026, January 19). Online retail sales in Vietnam jump 35% to over $16 bln in 2025: report. {MARKET}",f"Metric. Public service pricing. {COMP}",'ShopScope. Executed Jupyter notebook, evidence.json and generated figures. Evidence ID: '+EVIDENCE_ID]:para(s)
+for s in [f"Easy Data. (2025). Shopee Diaper Listings: Six Markets, November 2025. Kaggle. {E['source_url']}",f"Easy Data. Marketplace Datasets and Data Quality Guides. {E['publisher_url']}",f"VCCI. (2026, January 19). Online retail sales in Vietnam jump 35% to over $16 bln in 2025: report. {MARKET}",f"Metric. Public service pricing (Starter; accessed 19 November 2026). {COMP}",'ShopScope. Executed Jupyter notebook, evidence.json and generated figures. Evidence ID: '+EVIDENCE_ID]:para(s)
 sub('Source file checksums')
 for f in E['files']:para(f["file"]+" | "+str(f["rows"])+" rows | SHA-256 "+f["sha256"])
 docx=REPORT/'ShopScope_Business_Report.docx';doc.save(docx)
